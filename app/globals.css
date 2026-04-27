@@ -1,0 +1,580 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+:root {
+  --radius: 0.625rem;
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --chart-1: oklch(0.646 0.222 41.116);
+  --chart-2: oklch(0.6 0.118 184.704);
+  --chart-3: oklch(0.398 0.07 227.392);
+  --chart-4: oklch(0.828 0.189 84.429);
+  --chart-5: oklch(0.769 0.188 70.08);
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
+}
+
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.922 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
+  --chart-1: oklch(0.488 0.243 264.376);
+  --chart-2: oklch(0.696 0.17 162.48);
+  --chart-3: oklch(0.769 0.188 70.08);
+  --chart-4: oklch(0.627 0.265 303.9);
+  --chart-5: oklch(0.645 0.246 16.439);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.556 0 0);
+}
+.styled-scrollbar {
+scrollbar-width: none;
+    scrollbar-color: #eaeaea transparent;
+}
+/**
+* @license
+*
+* Font Family: Poppins
+* Designed by: Jonny Pinhorn, Indian Type Foundry
+* URL: https://www.fontshare.com/fonts/poppins
+* © 2025 Indian Type Foundry
+*
+* Poppins Thin 
+* Poppins ThinItalic 
+* Poppins ExtraLight 
+* Poppins ExtraLightItalic 
+* Poppins Light 
+* Poppins LightItalic 
+* Poppins Regular 
+* Poppins Italic 
+* Poppins Medium 
+* Poppins MediumItalic 
+* Poppins SemiBold 
+* Poppins SemiBoldItalic 
+* Poppins Bold 
+* Poppins BoldItalic 
+* Poppins ExtraBold 
+* Poppins ExtraBoldItalic 
+* Poppins Black 
+* Poppins BlackItalic 
+* Poppins Variable (Variable font)
+* Poppins VariableItalic (Variable font)
+
+*
+*/
+@font-face {
+  font-family: 'Poppins-Thin';
+  src: url('../fonts/Poppins-Thin.woff2') format('woff2'),
+       url('../fonts/Poppins-Thin.woff') format('woff'),
+       url('../fonts/Poppins-Thin.ttf') format('truetype');
+  font-weight: 100;
+  font-display: swap;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Poppins-ThinItalic';
+  src: url('../fonts/Poppins-ThinItalic.woff2') format('woff2'),
+       url('../fonts/Poppins-ThinItalic.woff') format('woff'),
+       url('../fonts/Poppins-ThinItalic.ttf') format('truetype');
+  font-weight: 100;
+  font-display: swap;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'Poppins-ExtraLight';
+  src: url('../fonts/Poppins-ExtraLight.woff2') format('woff2'),
+       url('../fonts/Poppins-ExtraLight.woff') format('woff'),
+       url('../fonts/Poppins-ExtraLight.ttf') format('truetype');
+  font-weight: 200;
+  font-display: swap;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Poppins-ExtraLightItalic';
+  src: url('../fonts/Poppins-ExtraLightItalic.woff2') format('woff2'),
+       url('../fonts/Poppins-ExtraLightItalic.woff') format('woff'),
+       url('../fonts/Poppins-ExtraLightItalic.ttf') format('truetype');
+  font-weight: 200;
+  font-display: swap;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'Poppins-Light';
+  src: url('../fonts/Poppins-Light.woff2') format('woff2'),
+       url('../fonts/Poppins-Light.woff') format('woff'),
+       url('../fonts/Poppins-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-display: swap;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Poppins-LightItalic';
+  src: url('../fonts/Poppins-LightItalic.woff2') format('woff2'),
+       url('../fonts/Poppins-LightItalic.woff') format('woff'),
+       url('../fonts/Poppins-LightItalic.ttf') format('truetype');
+  font-weight: 300;
+  font-display: swap;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'Poppins-Regular';
+  src: url('../fonts/Poppins-Regular.woff2') format('woff2'),
+       url('../fonts/Poppins-Regular.woff') format('woff'),
+       url('../fonts/Poppins-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-display: swap;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Poppins-Italic';
+  src: url('../fonts/Poppins-Italic.woff2') format('woff2'),
+       url('../fonts/Poppins-Italic.woff') format('woff'),
+       url('../fonts/Poppins-Italic.ttf') format('truetype');
+  font-weight: 400;
+  font-display: swap;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'Poppins-Medium';
+  src: url('../fonts/Poppins-Medium.woff2') format('woff2'),
+       url('../fonts/Poppins-Medium.woff') format('woff'),
+       url('../fonts/Poppins-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-display: swap;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Poppins-MediumItalic';
+  src: url('../fonts/Poppins-MediumItalic.woff2') format('woff2'),
+       url('../fonts/Poppins-MediumItalic.woff') format('woff'),
+       url('../fonts/Poppins-MediumItalic.ttf') format('truetype');
+  font-weight: 500;
+  font-display: swap;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'Poppins-SemiBold';
+  src: url('../fonts/Poppins-SemiBold.woff2') format('woff2'),
+       url('../fonts/Poppins-SemiBold.woff') format('woff'),
+       url('../fonts/Poppins-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-display: swap;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Poppins-SemiBoldItalic';
+  src: url('../fonts/Poppins-SemiBoldItalic.woff2') format('woff2'),
+       url('../fonts/Poppins-SemiBoldItalic.woff') format('woff'),
+       url('../fonts/Poppins-SemiBoldItalic.ttf') format('truetype');
+  font-weight: 600;
+  font-display: swap;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'Poppins-Bold';
+  src: url('../fonts/Poppins-Bold.woff2') format('woff2'),
+       url('../fonts/Poppins-Bold.woff') format('woff'),
+       url('../fonts/Poppins-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-display: swap;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Poppins-BoldItalic';
+  src: url('../fonts/Poppins-BoldItalic.woff2') format('woff2'),
+       url('../fonts/Poppins-BoldItalic.woff') format('woff'),
+       url('../fonts/Poppins-BoldItalic.ttf') format('truetype');
+  font-weight: 700;
+  font-display: swap;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'Poppins-ExtraBold';
+  src: url('../fonts/Poppins-ExtraBold.woff2') format('woff2'),
+       url('../fonts/Poppins-ExtraBold.woff') format('woff'),
+       url('../fonts/Poppins-ExtraBold.ttf') format('truetype');
+  font-weight: 800;
+  font-display: swap;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Poppins-ExtraBoldItalic';
+  src: url('../fonts/Poppins-ExtraBoldItalic.woff2') format('woff2'),
+       url('../fonts/Poppins-ExtraBoldItalic.woff') format('woff'),
+       url('../fonts/Poppins-ExtraBoldItalic.ttf') format('truetype');
+  font-weight: 800;
+  font-display: swap;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'Poppins-Black';
+  src: url('../fonts/Poppins-Black.woff2') format('woff2'),
+       url('../fonts/Poppins-Black.woff') format('woff'),
+       url('../fonts/Poppins-Black.ttf') format('truetype');
+  font-weight: 900;
+  font-display: swap;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Poppins-BlackItalic';
+  src: url('../fonts/Poppins-BlackItalic.woff2') format('woff2'),
+       url('../fonts/Poppins-BlackItalic.woff') format('woff'),
+       url('../fonts/Poppins-BlackItalic.ttf') format('truetype');
+  font-weight: 900;
+  font-display: swap;
+  font-style: italic;
+}
+/**
+* This is a variable font
+* You can control variable axes as shown below:
+* font-variation-settings: wght 100.0;
+*
+* available axes:
+'wght' (range from 100.0 to 900.0
+*/
+@font-face {
+  font-family: 'Poppins-Variable';
+  src: url('../fonts/Poppins-Variable.woff2') format('woff2'),
+       url('../fonts/Poppins-Variable.woff') format('woff'),
+       url('../fonts/Poppins-Variable.ttf') format('truetype');
+  font-weight: 100 900;
+  font-display: swap;
+  font-style: normal;
+}
+/**
+* This is a variable font
+* You can control variable axes as shown below:
+* font-variation-settings: wght 100.0;
+*
+* available axes:
+'wght' (range from 100.0 to 900.0
+*/
+@font-face {
+  font-family: 'Poppins-VariableItalic';
+  src: url('../fonts/Poppins-VariableItalic.woff2') format('woff2'),
+       url('../fonts/Poppins-VariableItalic.woff') format('woff'),
+       url('../fonts/Poppins-VariableItalic.ttf') format('truetype');
+  font-weight: 100 900;
+  font-display: swap;
+  font-style: italic;
+}
+/**
+* @license
+*
+* Font Family: Be Vietnam Pro
+* Designed by: Lam Bao, Tony Le, Vietanh Nguyen
+* URL: https://www.fontshare.com/fonts/beVietnam-pro
+* © 2025 Indian Type Foundry
+*
+* Be Vietnam Pro Thin 
+* Be Vietnam Pro ThinItalic 
+* Be Vietnam Pro ExtraLight 
+* Be Vietnam Pro ExtraLightItalic 
+* Be Vietnam Pro Light 
+* Be Vietnam Pro LightItalic 
+* Be Vietnam Pro Regular 
+* Be Vietnam Pro Italic 
+* Be Vietnam Pro Medium 
+* Be Vietnam Pro MediumItalic 
+* Be Vietnam Pro SemiBold 
+* Be Vietnam Pro SemiBoldItalic 
+* Be Vietnam Pro Bold 
+* Be Vietnam Pro BoldItalic 
+* Be Vietnam Pro ExtraBold 
+* Be Vietnam Pro ExtraBoldItalic 
+* Be Vietnam Pro Black 
+* Be Vietnam Pro BlackItalic 
+* Be Vietnam Pro Variable (Variable font)
+* Be Vietnam Pro VariableItalic (Variable font)
+
+*
+*/
+@font-face {
+  font-family: 'BeVietnamPro-Thin';
+  src: url('../fonts/BeVietnamPro-Thin.woff2') format('woff2'),
+       url('../fonts/BeVietnamPro-Thin.woff') format('woff'),
+       url('../fonts/BeVietnamPro-Thin.ttf') format('truetype');
+  font-weight: 100;
+  font-display: swap;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'BeVietnamPro-ThinItalic';
+  src: url('../fonts/BeVietnamPro-ThinItalic.woff2') format('woff2'),
+       url('../fonts/BeVietnamPro-ThinItalic.woff') format('woff'),
+       url('../fonts/BeVietnamPro-ThinItalic.ttf') format('truetype');
+  font-weight: 100;
+  font-display: swap;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'BeVietnamPro-ExtraLight';
+  src: url('../fonts/BeVietnamPro-ExtraLight.woff2') format('woff2'),
+       url('../fonts/BeVietnamPro-ExtraLight.woff') format('woff'),
+       url('../fonts/BeVietnamPro-ExtraLight.ttf') format('truetype');
+  font-weight: 200;
+  font-display: swap;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'BeVietnamPro-ExtraLightItalic';
+  src: url('../fonts/BeVietnamPro-ExtraLightItalic.woff2') format('woff2'),
+       url('../fonts/BeVietnamPro-ExtraLightItalic.woff') format('woff'),
+       url('../fonts/BeVietnamPro-ExtraLightItalic.ttf') format('truetype');
+  font-weight: 200;
+  font-display: swap;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'BeVietnamPro-Light';
+  src: url('../fonts/BeVietnamPro-Light.woff2') format('woff2'),
+       url('../fonts/BeVietnamPro-Light.woff') format('woff'),
+       url('../fonts/BeVietnamPro-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-display: swap;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'BeVietnamPro-LightItalic';
+  src: url('../fonts/BeVietnamPro-LightItalic.woff2') format('woff2'),
+       url('../fonts/BeVietnamPro-LightItalic.woff') format('woff'),
+       url('../fonts/BeVietnamPro-LightItalic.ttf') format('truetype');
+  font-weight: 300;
+  font-display: swap;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'BeVietnamPro-Regular';
+  src: url('../fonts/BeVietnamPro-Regular.woff2') format('woff2'),
+       url('../fonts/BeVietnamPro-Regular.woff') format('woff'),
+       url('../fonts/BeVietnamPro-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-display: swap;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'BeVietnamPro-Italic';
+  src: url('../fonts/BeVietnamPro-Italic.woff2') format('woff2'),
+       url('../fonts/BeVietnamPro-Italic.woff') format('woff'),
+       url('../fonts/BeVietnamPro-Italic.ttf') format('truetype');
+  font-weight: 400;
+  font-display: swap;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'BeVietnamPro-Medium';
+  src: url('../fonts/BeVietnamPro-Medium.woff2') format('woff2'),
+       url('../fonts/BeVietnamPro-Medium.woff') format('woff'),
+       url('../fonts/BeVietnamPro-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-display: swap;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'BeVietnamPro-MediumItalic';
+  src: url('../fonts/BeVietnamPro-MediumItalic.woff2') format('woff2'),
+       url('../fonts/BeVietnamPro-MediumItalic.woff') format('woff'),
+       url('../fonts/BeVietnamPro-MediumItalic.ttf') format('truetype');
+  font-weight: 500;
+  font-display: swap;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'BeVietnamPro-SemiBold';
+  src: url('../fonts/BeVietnamPro-SemiBold.woff2') format('woff2'),
+       url('../fonts/BeVietnamPro-SemiBold.woff') format('woff'),
+       url('../fonts/BeVietnamPro-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-display: swap;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'BeVietnamPro-SemiBoldItalic';
+  src: url('../fonts/BeVietnamPro-SemiBoldItalic.woff2') format('woff2'),
+       url('../fonts/BeVietnamPro-SemiBoldItalic.woff') format('woff'),
+       url('../fonts/BeVietnamPro-SemiBoldItalic.ttf') format('truetype');
+  font-weight: 600;
+  font-display: swap;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'BeVietnamPro-Bold';
+  src: url('../fonts/BeVietnamPro-Bold.woff2') format('woff2'),
+       url('../fonts/BeVietnamPro-Bold.woff') format('woff'),
+       url('../fonts/BeVietnamPro-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-display: swap;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'BeVietnamPro-BoldItalic';
+  src: url('../fonts/BeVietnamPro-BoldItalic.woff2') format('woff2'),
+       url('../fonts/BeVietnamPro-BoldItalic.woff') format('woff'),
+       url('../fonts/BeVietnamPro-BoldItalic.ttf') format('truetype');
+  font-weight: 700;
+  font-display: swap;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'BeVietnamPro-ExtraBold';
+  src: url('../fonts/BeVietnamPro-ExtraBold.woff2') format('woff2'),
+       url('../fonts/BeVietnamPro-ExtraBold.woff') format('woff'),
+       url('../fonts/BeVietnamPro-ExtraBold.ttf') format('truetype');
+  font-weight: 800;
+  font-display: swap;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'BeVietnamPro-ExtraBoldItalic';
+  src: url('../fonts/BeVietnamPro-ExtraBoldItalic.woff2') format('woff2'),
+       url('../fonts/BeVietnamPro-ExtraBoldItalic.woff') format('woff'),
+       url('../fonts/BeVietnamPro-ExtraBoldItalic.ttf') format('truetype');
+  font-weight: 800;
+  font-display: swap;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'BeVietnamPro-Black';
+  src: url('../fonts/BeVietnamPro-Black.woff2') format('woff2'),
+       url('../fonts/BeVietnamPro-Black.woff') format('woff'),
+       url('../fonts/BeVietnamPro-Black.ttf') format('truetype');
+  font-weight: 900;
+  font-display: swap;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'BeVietnamPro-BlackItalic';
+  src: url('../fonts/BeVietnamPro-BlackItalic.woff2') format('woff2'),
+       url('../fonts/BeVietnamPro-BlackItalic.woff') format('woff'),
+       url('../fonts/BeVietnamPro-BlackItalic.ttf') format('truetype');
+  font-weight: 900;
+  font-display: swap;
+  font-style: italic;
+}
+/**
+* This is a variable font
+* You can control variable axes as shown below:
+* font-variation-settings: wght 100.0;
+*
+* available axes:
+'wght' (range from 100.0 to 900.0
+*/
+@font-face {
+  font-family: 'BeVietnamPro-Variable';
+  src: url('../fonts/BeVietnamPro-Variable.woff2') format('woff2'),
+       url('../fonts/BeVietnamPro-Variable.woff') format('woff'),
+       url('../fonts/BeVietnamPro-Variable.ttf') format('truetype');
+  font-weight: 100 900;
+  font-display: swap;
+  font-style: normal;
+}
+/**
+* This is a variable font
+* You can control variable axes as shown below:
+* font-variation-settings: wght 100.0;
+*
+* available axes:
+'wght' (range from 100.0 to 900.0
+*/
+@font-face {
+  font-family: 'BeVietnamPro-VariableItalic';
+  src: url('../fonts/BeVietnamPro-VariableItalic.woff2') format('woff2'),
+       url('../fonts/BeVietnamPro-VariableItalic.woff') format('woff'),
+       url('../fonts/BeVietnamPro-VariableItalic.ttf') format('truetype');
+  font-weight: 100 900;
+  font-display: swap;
+  font-style: italic;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
