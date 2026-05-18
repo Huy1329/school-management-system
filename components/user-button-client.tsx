@@ -22,15 +22,6 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
-// import { ThemeToggle } from "./ThemeToggle";
-// import FeedBack from "./feedback";
-// import GitHub from "./GitHub";
-// import X from "./x";
-// import { Loader } from "./ui/loader";
-
-// import Image from "next/image";
-// import ThemeToggleButton from "./ui/theme-toggle-button";
-// import { SearchUi } from "./search-ui";
 import { useSearchContext } from "fumadocs-ui/contexts/search";
 import { authClient } from "@/app/lib/auth-client";
 import Image from "next/image";
@@ -77,19 +68,11 @@ const itemsPartOne = [
     directLink: `user`,
   },
   {
-    name: "Create Projects",
+    name: "Support",
     icon: (
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="23"
-        height="23"
-        fill="#ffffff"
-        viewBox="0 0 256 256"
-      >
-        <path d="M128,24A104,104,0,1,0,232,128,104.13,104.13,0,0,0,128,24Zm40,112H136v32a8,8,0,0,1-16,0V136H88a8,8,0,0,1,0-16h32V88a8,8,0,0,1,16,0v32h32a8,8,0,0,1,0,16Z"></path>
-      </svg>
+      <svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 24 24"><path fill="#ffffff" d="M12 2C6.486 2 2 6.486 2 12v4.143C2 17.167 2.897 18 4 18h1a1 1 0 0 0 1-1v-5.143a1 1 0 0 0-1-1h-.908C4.648 6.987 7.978 4 12 4s7.352 2.987 7.908 6.857H19a1 1 0 0 0-1 1V18c0 1.103-.897 2-2 2h-2v-1h-4v3h6c2.206 0 4-1.794 4-4c1.103 0 2-.833 2-1.857V12c0-5.514-4.486-10-10-10z"/></svg>
     ),
-    directLink: "create-projects",
+    directLink: "support",
   },
 ];
 const itemsPartTwo = [
@@ -172,7 +155,7 @@ export default function UserButtonClient() {
   const [isHovered, setIsHovered] = useState(false);
 
   const name = session?.user.name;
-  const cleanName = removeVietnameseTones(name); // "Pham Quang Truong An"
+  const cleanName = removeVietnameseTones(name);
 
   const { refs, floatingStyles, context } = useFloating({
     open: isOpen,
@@ -224,75 +207,25 @@ export default function UserButtonClient() {
     });
   };
   const encodeEmail = (email: string) => {
-    if (email) return "";
+    if (!email) return "";
     return email.replace("@", "-").replace(/\./g, "");
   };
   const imageUrl =
     session?.user.image ||
-    `https://avatar.vercel.sh/${encodeURIComponent(userName)}?size=60`;
+    `https://github.com/evilrabbit.png`;
   if (isPending) {
     return <div />;
   }
   return (
     <div className={`flex items-center gap-4`}>
       <motion.div
-        initial={{ opacity: 0 }}
+        initial={false}
         animate={!isPending ? { opacity: 1 } : { opacity: 0 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
         className={`${
           !isPending ? "" : "pointer-events-none"
         } flex items-center gap-2`}
       >
-        {/* <div
-          style={{
-            backgroundColor:
-              "color-mix(in oklab,var(--color-fd-secondary)50%,transparent)",
-          }}
-          onClick={() => {
-            setOpenSearch(true);
-          }}
-          className="flex h-[32px] w-fit cursor-pointer items-center justify-center gap-2 rounded-full border border-(--input) p-3 select-none"
-        >
-          <svg
-            onClick={() => {
-              setOpenSearch(true);
-            }}
-            className="size-4.5 shrink-0"
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="#ffffff"
-            viewBox="0 0 256 256"
-          >
-            <title>Search Icon</title>
-            <path d="M229.66,218.34l-50.07-50.06a88.11,88.11,0,1,0-11.31,11.31l50.06,50.07a8,8,0,0,0,11.32-11.32ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z"></path>
-          </svg>
-          <p className="text-xs text-[#a1a1a1]"> Search for documents</p>
-          <div className="flex gap-1">
-            <kbd className="text-muted-foreground pointer-events-none inline-flex h-5 items-center gap-1 rounded border border-(--input) px-1.5 font-sans text-[10px] font-medium opacity-100 select-none">
-              <span className="text-xs">Ctrl</span>
-            </kbd>
-            <kbd className="text-muted-foreground pointer-events-none inline-flex h-5 items-center gap-1 rounded border border-(--input) px-1.5 font-sans text-[10px] font-medium opacity-100 select-none">
-              <span className="text-xs">K</span>
-            </kbd>
-          </div>
-        </div> */}
-        {/* <SearchUi /> */}
-        {/* <div className="hover:bg-muted flex h-[30px] w-[37px] cursor-pointer items-center justify-center rounded-md border transition-all duration-200 ease-out dark:hover:bg-[#101010]">
-        <Link
-          href={"https://github.com/developerplus2025/decent-over-nextjs-15/"}
-        >
-          {" "}
-          <GitHub />
-        </Link>
-      </div>
-      <div className="hover:bg-muted flex h-[30px] w-[37px] cursor-pointer items-center justify-center rounded-md border transition-all duration-200 ease-out dark:hover:bg-[#101010]">
-        <Link href={"https://x.com/DeveloperPlus24"}><X /></Link>
-      </div> */}
-
-        {/* <ThemeToggleButton /> */}
-
-        {/* <FeedBack /> */}
         {session?.user && (
           <div>
             <div
@@ -303,7 +236,7 @@ export default function UserButtonClient() {
             >
               <Avatar className="">
                 <AvatarImage className=" rounded-full size-8" src={imageUrl} />
-                <AvatarFallback>{userName[0]}</AvatarFallback>
+                <AvatarFallback>{userName?.[0] ?? "?"}</AvatarFallback>
               </Avatar>
               {/* {session && session.user && session.user.image ? (
                 <img

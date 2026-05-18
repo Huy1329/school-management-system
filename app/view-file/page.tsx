@@ -1,7 +1,7 @@
 "use client"
 import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
 import { useSearchParams } from "next/navigation";
-import "@cyntler/react-doc-viewer/dist/index.css";
+//import "@cyntler/react-doc-viewer/dist/index.css";
 export default function ViewFilePage() {
   const searchParams = useSearchParams();
   const url = searchParams.get("url");

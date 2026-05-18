@@ -205,15 +205,7 @@ export default function UploadToServer() {
   >([]);
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState("");
-  const [isDragging, setIsDragging] = useState(false);
 
-  const handleFiles = (files: File[]) => {
-    // xử lý files ở đây, ví dụ:
-    files.forEach(file => {
-      console.log(file.name);
-      // upload logic...
-    });
-  };
   // 🔧 State đổi tên file
   const [editingFile, setEditingFile] = useState<string | null>(null);
   const [newName, setNewName] = useState("");
@@ -412,7 +404,6 @@ export default function UploadToServer() {
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
-
   const table = useReactTable<TypeData>({
     data: serverFiles,
     columns,
@@ -484,52 +475,20 @@ export default function UploadToServer() {
                       Upload
                     </Button>
                   </AlertDialogTrigger>
-                  <AlertDialogContent className="max-w-[800px]! ">
+                  <AlertDialogContent className="max-w-[900px]! ">
                     <AlertDialogHeader>
                       <AlertDialogCancel className="self-end border-none! dark:bg-none!">
                         <XIcon></XIcon>
                       </AlertDialogCancel>
-
-                      
                       <AlertDialogTitle className="flex w-full pb-4 justify-center">
-                        <div
-                          className={`w-full border-2 border-dashed rounded-xl py-3 flex flex-col items-center gap-3 cursor-pointer transition-colors
-                            ${isDragging 
-                              ? 'border-white/60 bg-white/10' 
-                              : 'border-white/20 bg-transparent hover:border-white/40 hover:bg-white/5'
-                            }`}
-                          onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
-                          onDragLeave={() => setIsDragging(false)}
-                          onDrop={(e) => {
-                            e.preventDefault();
-                            setIsDragging(false);
-                            const files = Array.from(e.dataTransfer.files);
-                            handleFiles(files);
-                          }}
-                          onClick={openFileDialog}
-                        >
-                          <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-white/60">
-                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                            <polyline points="17 8 12 3 7 8"/>
-                            <line x1="12" y1="3" x2="12" y2="15"/>
-                          </svg>
-                          <div className="text-center">
-                            <p className="text-white font-semibold text-sm">Drag and drop or select files to upload</p>
-                            <p className="text-white/50 text-xs mt-1">(Max 5MB per file, max 30 files)</p>
-                          </div>
-                          <Button
-                            variant="outline"
-                            className="mt-2 bg-transparent border-white/30 text-white hover:bg-white/10"
-                            onClick={(e) => { e.stopPropagation(); openFileDialog(); }}
-                          >
-                            Select file
-                          </Button>
-                        </div>
+                        <Button variant={"outline"} onClick={openFileDialog}>
+                          Select file
+                        </Button>
                       </AlertDialogTitle>
 
                       {files.length > 0 && (
-                        <div className="flex flex-col" style={{ maxHeight: "50vh" }}>
-                          <ScrollArea className="h-[150px]">
+                        <div className="space-y-2">
+                          <ScrollArea className="h-[400px] flex flex-col gap-4 space-y-2">
                             {files.map((file) => (
                               <div
                                 key={file.id}

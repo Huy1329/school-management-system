@@ -1,4 +1,5 @@
 import { betterAuth } from "better-auth";
+import { nextCookies } from "better-auth/next-js";
 import { Pool } from "pg";
 
 type JWTToken = { [key: string]: unknown; id?: string | number };
@@ -9,6 +10,7 @@ type AuthSession = { user?: { id?: string | number } } & Record<
 >;
 
 export const auth = betterAuth({
+  plugins: [nextCookies()],
   emailAndPassword: {
     enabled: true,
   },
@@ -20,10 +22,11 @@ export const auth = betterAuth({
     google: {
       clientId: process.env.GOOGLE_CLIENT_ID as string,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+      prompt: "select_account",
     },
   },
   database: new Pool({
-    connectionString: "postgres://school_user:123456@localhost:5432/school_db",
+    connectionString: process.env.DATABASE_URL, // ✅ Nên dùng env thay vì hardcode
   }),
   session: {
     expiresIn: 60 * 60 * 24 * 7, // 7 ngày

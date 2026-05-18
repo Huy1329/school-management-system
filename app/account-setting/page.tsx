@@ -25,7 +25,7 @@ export default function AccountSettings() {
   const sessionState = authClient.useSession();
   const user = sessionState.data?.user as ExtendedUser | undefined;
 
-  const fallbackAvatar = "/default-avatar.png";
+  const fallbackAvatar = "https://github.com/evilrabbit.png";
 
   // Lấy avatar từ social (Google / Github)
   const getSocialAvatar = () => {

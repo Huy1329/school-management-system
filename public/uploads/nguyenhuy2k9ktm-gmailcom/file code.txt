@@ -831,27 +831,17 @@ export default function HomeSearchPage() {
       rowSelection,
     },
   });
-  const tableWrapperRef = useRef<HTMLDivElement>(null);
-
-  const updatePageSize = useCallback(() => {
-    if (!tableWrapperRef.current) return;
-    const availableHeight = tableWrapperRef.current.clientHeight;
-    const ROW_HEIGHT = 53;
-    const HEADER_HEIGHT = 45;
-    const newSize = Math.max(1, Math.floor((availableHeight - HEADER_HEIGHT) / ROW_HEIGHT));
-    table.setPageSize(newSize);
+  useEffect(() => {
+    table.setPageSize(5); // đặt pageSize mặc định
   }, [table]);
 
-  useEffect(() => {
-    updatePageSize();
-    const observer = new ResizeObserver(updatePageSize);
-    if (tableWrapperRef.current) observer.observe(tableWrapperRef.current);
-    return () => observer.disconnect();
-  }, [updatePageSize]);
-
   return (
-        <div className="w-full h-full px-12 pt-8 flex flex-col overflow-hidden">
-          <div className="flex-shrink-0 flex gap-4 items-center justify-between py-4">
+    <div className="w-full h-[calc(100vh-100px)] pt-12 px-12 mx-auto  flex flex-col items-center gap-6">
+      {/* Thanh tìm kiếm */}
+
+      <ul className="w-full">
+        <div className="w-full">
+          <div className="flex  gap-4 items-center justify-between py-4">
             <InputGroup>
               <InputGroupInput
                 placeholder="Filter file name..."
@@ -1084,7 +1074,7 @@ export default function HomeSearchPage() {
               </DropdownMenu>
             </div>
           </div>
-          <div ref={tableWrapperRef} className="flex-1 min-h-0 overflow-auto rounded-md border">
+          <div className="overflow-hidden  rounded-md border">
             <Table>
               <TableHeader>
                 {table.getHeaderGroups().map((headerGroup) => (
@@ -1139,7 +1129,7 @@ export default function HomeSearchPage() {
               </TableBody>
             </Table>
           </div>
-          <div className="flex-shrink-0 flex items-center justify-end space-x-2 py-4">
+          <div className="flex items-center justify-end space-x-2 py-4">
             <div className="text-muted-foreground flex-1 text-sm">
               {table.getFilteredSelectedRowModel().rows.length} of{" "}
               {table.getFilteredRowModel().rows.length} row(s) selected.
@@ -1182,5 +1172,7 @@ export default function HomeSearchPage() {
             </div>
           </div>
         </div>
+      </ul>
+    </div>
   );
 }
