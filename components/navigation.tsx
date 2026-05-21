@@ -22,16 +22,17 @@ const data = [
     name: "Pricing",
     src: "/pricing",
   },
+ 
   {
     id: 4,
-    name: "Changelog",
-    src: "/changelog",
+    name: "Support",
+    src: "/support",
   },
-  {
+  /* {
     id: 5,
     name: "Docs",
     src: "/docs",
-  },
+  },*/
 ];
 export default function Navigation() {
   const pathname = usePathname();
@@ -59,33 +60,46 @@ export default function Navigation() {
 
   return (
     <div
-      className={`w-full fixed  z-20 top-0 bg-black px-12 border-b ${
+      className={`w-full fixed z-20 top-0
+        backdrop-blur-xl
+        bg-black/30
+        border-b border-white/10
+        shadow-lg
+        px-12 ${
         pathname == "/view-file" ||
         pathname == "/sign-up" ||
         pathname == "/login"
           ? "hidden"
           : "flex"
-      } justify-between items-center border-input h-[60px]`}
+      } items-center h-[60px]`}
     >
-      <div className="flex gap-8 items-center">
+      {/* Logo bên trái */}
+      <div className="flex items-center">
         <Link href={"/home"} className="text-md font-semibold">
           DocsFuture
         </Link>
-        <div className="gap-4 items-center flex">
-          {data.map((link) => (
-            <Link
-              key={link.id}
-              className={`link text-sm transition-colors ease-out duration-300 hover:text-white ${
-                pathname === `${link.src}` ? "text-[white]" : "text-[#a1a1a1]"
-              }`}
-              href={link.src}
-            >
-              {link.name}
-            </Link>
-          ))}
-        </div>
       </div>
-      <div className="gap-4 flex items-center">
+
+      {/* Menu ở giữa */}
+      <div className="absolute left-1/2 -translate-x-1/2 flex gap-6 items-center">
+        {data.map((link) => (
+          <Link
+            key={link.id}
+            className={`relative text-sm transition-colors duration-300 hover:text-white ${
+              pathname === link.src ? "text-white" : "text-[#a1a1a1]"
+            }`}
+            href={link.src}
+          >
+            {link.name}
+            {pathname === link.src && (
+              <span className="absolute -bottom-1 left-0 right-0 h-px bg-white rounded-full" />
+            )}
+          </Link>
+        ))}
+      </div>
+
+      {/* User button bên phải */}
+      <div className="ml-auto flex items-center gap-4">
         <UserButtonClient />
       </div>
     </div>

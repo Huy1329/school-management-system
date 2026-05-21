@@ -16,21 +16,22 @@ export default function Pricing() {
                         <div className="space-y-4">
                             <div>
                                 <h2 className="font-medium">Free</h2>
-                                <span className="my-3 block text-2xl font-semibold">$0 / mo</span>
+                                <span className="my-3 block text-2xl font-semibold">0 VND / Tháng</span>
                                 <p className="text-muted-foreground text-sm">Per editor</p>
                             </div>
 
                             <Button
                                 asChild
                                 variant="outline"
-                                className="w-full">
-                                <Link href="">Get Started</Link>
+                                disabled
+                                className="w-full pointer-events-none opacity-50 cursor-not-allowed ">
+                                <Link href="/home">Get Started</Link>
                             </Button>
 
                             <hr className="border-dashed" />
 
                             <ul className="list-outside space-y-3 text-sm">
-                                {['Basic Analytics Dashboard', '5GB Cloud Storage', 'Email and Chat Support'].map((item, index) => (
+                                {['Basic Analytics Dashboard', '5MB Cloud Storage', 'Email and Chat Support'].map((item, index) => (
                                     <li
                                         key={index}
                                         className="flex items-center gap-2">
@@ -47,7 +48,7 @@ export default function Pricing() {
                             <div className="space-y-4">
                                 <div>
                                     <h2 className="font-medium">Pro</h2>
-                                    <span className="my-3 block text-2xl font-semibold">$19 / mo</span>
+                                    <span className="my-3 block text-2xl font-semibold">20.000 VND / Tháng</span>
                                     <p className="text-muted-foreground text-sm">Per editor</p>
                                 </div>
 

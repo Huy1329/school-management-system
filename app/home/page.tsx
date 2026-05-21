@@ -1,11 +1,15 @@
+"use client";
 import LiquidEther from "@/components/LiquidEther";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Mail, SendHorizonal } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
+import { useSession } from "@/app/lib/auth-client";
 
 export default function HomePage() {
+  const { data: session } = useSession();
+
   return (
     <main className="w-full flex justify-center relative items-center h-[calc(100vh-60px)]">
       {/* Hiệu ứng nền - z-index thấp */}
@@ -53,11 +57,14 @@ export default function HomePage() {
             goals, develop critical thinking, and grow into a lifelong learner.
           </p>
           <div className="flex gap-4 items-center">
-            <Link href={"/login"}>
-              <Button variant={"outline"}>Getting Started</Button>
-            </Link>
-            <Link href={"/library"}>
-              <Button variant={"outline"}>Explore Now</Button>
+            <Link href={session ? "/library" : "/login"}>
+              <Button 
+                variant={"outline"}
+                className="flex items-center gap-2"
+              >
+                Getting Started
+              
+              </Button>
             </Link>
           </div>
         </div>

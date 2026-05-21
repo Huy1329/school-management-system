@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+//import { useState } from "react";
 import Image from "next/image";
 import { authClient } from "../lib/auth-client";
-
+// Dòng đầu file, sửa lại
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -24,7 +25,8 @@ type ExtendedUser = {
 export default function AccountSettings() {
   const sessionState = authClient.useSession();
   const user = sessionState.data?.user as ExtendedUser | undefined;
-
+  const { refetch } = authClient.useSession();
+  //const [avatar, setAvatar] = useState<string>(initialAvatar);
   const fallbackAvatar = "https://github.com/evilrabbit.png";
 
   // Lấy avatar từ social (Google / Github)
@@ -38,6 +40,15 @@ export default function AccountSettings() {
 
   const [avatar, setAvatar] = useState<string>(initialAvatar);
   const [loading, setLoading] = useState(false);
+  
+
+  useEffect(() => {
+    if (user?.image) {
+      setAvatar(user.image);
+    } else {
+      setAvatar(getSocialAvatar() || fallbackAvatar);
+    }
+  }, [user?.image]);
 
   // -------------------------
   // UPLOAD AVATAR
@@ -64,7 +75,7 @@ export default function AccountSettings() {
 
       // Update avatar trong BetterAuth
       await authClient.updateUser({ image: newUrl });
-
+      await refetch();
       // Update UI rất nhanh
       setAvatar(newUrl);
     } catch (err) {
@@ -98,9 +109,10 @@ export default function AccountSettings() {
 
       // Update user
       await authClient.updateUser({ image: fallback });
-
+      await refetch();
       // Update UI
       setAvatar(fallback);
+
     } catch (err) {
       console.error("Xoá avatar lỗi:", err);
       alert("Không thể xoá avatar!");
@@ -119,7 +131,7 @@ export default function AccountSettings() {
 
       <CardContent className="space-y-4">
         <div className="flex items-center gap-4">
-          <img
+          <Image
             src={avatar}
             alt="Avatar"
             width={100}

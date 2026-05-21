@@ -3,7 +3,7 @@ from fastapi.responses import FileResponse, Response
 from fastapi.middleware.cors import CORSMiddleware
 import os, shutil, urllib.parse, json
 from typing import List
-
+import re
 app = FastAPI()
 
 # ------------------------
@@ -126,6 +126,37 @@ async def search_user_files(
     return {"results": results}
 
 # ------------------------ 
+#      ALLOWED FILE TYPES
+# ------------------------
+ALLOWED_EXTENSIONS = {".pdf", ".doc", ".docx", ".txt"}
+ALLOWED_MIME_TYPES = {
+    "application/pdf",
+    "application/msword",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    "text/plain"
+}
+
+def validate_file_type(file: UploadFile) -> str:
+    """Kiểm tra extension + MIME type, trả về extension nếu hợp lệ."""
+    ext = os.path.splitext(file.filename)[1].lower()
+    
+    if ext not in ALLOWED_EXTENSIONS:
+        raise HTTPException(
+            status_code=400,
+            detail=f"File '{file.filename}': định dạng '{ext}' không được phép. "
+                   f"Chỉ chấp nhận: {', '.join(ALLOWED_EXTENSIONS)}"
+        )
+    
+    if file.content_type not in ALLOWED_MIME_TYPES:
+        raise HTTPException(
+            status_code=400,
+            detail=f"File '{file.filename}': MIME type '{file.content_type}' không hợp lệ."
+        )
+    
+    return ext
+
+
+# ------------------------ 
 #      UPLOAD FILES 
 # ------------------------
 @app.post("/upload")
@@ -139,6 +170,10 @@ async def upload_files(
     type_file: List[str] = Form(...),
     file_size: List[str] = Form(...)
 ):
+    if not (len(files) == len(titles) == len(labels) == len(date)
+            == len(file_class) == len(type_file) == len(file_size)):
+        raise HTTPException(status_code=400, detail="Số lượng metadata không khớp với số file.")
+
     encoded_email = encode_email(user_email)
     user_folder = os.path.join(BASE_DIR, encoded_email)
     os.makedirs(user_folder, exist_ok=True)
@@ -149,8 +184,17 @@ async def upload_files(
     for file, title, label, date_value, cls, ftype, fsize in zip(
         files, titles, labels, date, file_class, type_file, file_size
     ):
-        file_name = f"{title.strip()}{os.path.splitext(file.filename)[1]}"
+        # ✅ Validate định dạng file
+        ext = validate_file_type(file)
+
+        # ✅ Sanitize tên file
+        safe_title = re.sub(r"[^\w\-.]", "_", title.strip())
+        file_name = f"{safe_title}{ext}"
         file_path = os.path.join(user_folder, file_name)
+
+        # ✅ Chống path traversal
+        if not os.path.realpath(file_path).startswith(os.path.realpath(user_folder)):
+            raise HTTPException(status_code=400, detail=f"Tên file '{title}' không hợp lệ.")
 
         with open(file_path, "wb") as buffer:
             shutil.copyfileobj(file.file, buffer)

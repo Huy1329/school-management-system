@@ -15,6 +15,7 @@ import {
   User,
   Check,
   ChevronsUpDown,
+  Upload,
 } from "lucide-react";
 import Image from "next/image";
 import { useFileUpload, formatBytes } from "@/hooks/use-file-upload";
@@ -208,10 +209,33 @@ export default function UploadToServer() {
   const [isDragging, setIsDragging] = useState(false);
 
   const handleFiles = (files: File[]) => {
-    // xử lý files ở đây, ví dụ:
-    files.forEach(file => {
+    const allowedExtensions = [".pdf", ".doc", ".docx", ".txt"];
+
+    const validFiles = files.filter((file) => {
+      const lower = file.name.toLowerCase();
+
+      return allowedExtensions.some((ext) =>
+        lower.endsWith(ext)
+      );
+    });
+
+    const invalidFiles = files.filter((file) => {
+      const lower = file.name.toLowerCase();
+
+      return !allowedExtensions.some((ext) =>
+        lower.endsWith(ext)
+      );
+    });
+
+    if (invalidFiles.length > 0) {
+      toast.error(
+        "Only PDF, DOC, DOCX and TXT files are allowed."
+      );
+    }
+
+    // xử lý upload
+    validFiles.forEach((file) => {
       console.log(file.name);
-      // upload logic...
     });
   };
   // 🔧 State đổi tên file
@@ -404,6 +428,7 @@ export default function UploadToServer() {
       toast.error("Không thể kết nối đến server!");
     }
   };
+
   const [docs, setDocs] = useState<{ uri: string }[]>([]);
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -419,7 +444,7 @@ export default function UploadToServer() {
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
+    //getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
@@ -431,9 +456,46 @@ export default function UploadToServer() {
       rowSelection,
     },
   });
-  useEffect(() => {
-    table.setPageSize(8); // đặt pageSize mặc định
-  }, [table]);
+
+  // 🗑️ Xóa tất cả file được chọn
+  const selectedRows = table.getFilteredSelectedRowModel().rows;
+  const selectedCount = selectedRows.length;
+
+  const handleDeleteSelected = async () => {
+    if (!token || !userEmail) {
+      toast.warning("Vui lòng đăng nhập để xóa file.");
+      return;
+    }
+
+    try {
+      const deletePromises = selectedRows.map((row) =>
+        fetch(
+          `http://127.0.0.1:8000/delete/${encodeURIComponent(
+            row.original.name
+          )}?user_email=${userEmail}`,
+          {
+            method: "DELETE",
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        )
+      );
+
+      const results = await Promise.all(deletePromises);
+      const allOk = results.every((r) => r.ok);
+
+      if (allOk) {
+        toast.success(`Đã xóa ${selectedCount} file thành công.`);
+        setRowSelection({});
+        fetchServerFiles();
+      } else {
+        toast.error("Một số file không thể xóa.");
+        fetchServerFiles();
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("Không thể kết nối đến server!");
+    }
+  };
 
   return (
     <div className="flex mt-[40px] flex-col w-full px-[3rem]  gap-6">
@@ -453,7 +515,13 @@ export default function UploadToServer() {
             onDrop={handleDrop}
             className="relative hidden min-h-52 flex-col items-center justify-center overflow-hidden rounded-xl border border-dashed border-input p-4 transition-colors"
           >
-            <input multiple {...getInputProps()} className="sr-only" />
+            <input
+              {...getInputProps({
+                accept: ".pdf,.doc,.docx,.txt",
+                multiple: true,
+              })}
+              className="sr-only"
+            />
             <div className="text-center">
               <UploadIcon className="mb-2 size-8 opacity-60 mx-auto" />
               <p className="text-sm font-medium">
@@ -478,13 +546,44 @@ export default function UploadToServer() {
               />
 
               <div className="flex gap-4 items-center">
+                {/* ✅ Delete All button — chỉ hiện khi chọn >= 2 file */}
+                {selectedCount >= 2 && (
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button
+                        variant="destructive"
+                        className="flex items-center gap-2"
+                      >
+                        <Trash className="size-4" />
+                        Delete All ({selectedCount})
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>Xác nhận xóa</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          Bạn có chắc muốn xóa {selectedCount} file đã chọn?
+                          Hành động này không thể hoàn tác.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Hủy</AlertDialogCancel>
+                        <AlertDialogAction onClick={handleDeleteSelected}>
+                          Xóa tất cả
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+                )}
+
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
                     <Button variant="outline" className="">
+                      <Upload />
                       Upload
                     </Button>
                   </AlertDialogTrigger>
-                  <AlertDialogContent className="max-w-[800px]! ">
+                  <AlertDialogContent className="max-w-[850px]! ">
                     <AlertDialogHeader>
                       <AlertDialogCancel className="self-end border-none! dark:bg-none!">
                         <XIcon></XIcon>
@@ -503,9 +602,33 @@ export default function UploadToServer() {
                           onDrop={(e) => {
                             e.preventDefault();
                             setIsDragging(false);
-                            const files = Array.from(e.dataTransfer.files);
-                            handleFiles(files);
+
+                            const droppedFiles = Array.from(e.dataTransfer.files);
+
+                            const allowedExtensions = [
+                              ".pdf",
+                              ".doc",
+                              ".docx",
+                              ".txt",
+                            ];
+
+                            const validFiles = droppedFiles.filter((file) => {
+                              const lower = file.name.toLowerCase();
+
+                              return allowedExtensions.some((ext) =>
+                                lower.endsWith(ext)
+                              );
+                            });
+
+                            if (validFiles.length !== droppedFiles.length) {
+                              toast.error(
+                                "Only PDF, DOC, DOCX and TXT files are allowed."
+                              );
+                            }
+
+                            handleFiles(validFiles);
                           }}
+
                           onClick={openFileDialog}
                         >
                           <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-white/60">
@@ -515,7 +638,7 @@ export default function UploadToServer() {
                           </svg>
                           <div className="text-center">
                             <p className="text-white font-semibold text-sm">Drag and drop or select files to upload</p>
-                            <p className="text-white/50 text-xs mt-1">(Max 5MB per file, max 30 files)</p>
+                            <p className="text-white/50 text-xs mt-1">(PDF, DOC, DOCX, TXT only • Max 5MB per file • Max 30 files)</p>
                           </div>
                           <Button
                             variant="outline"
@@ -528,13 +651,16 @@ export default function UploadToServer() {
                       </AlertDialogTitle>
 
                       {files.length > 0 && (
-                        <div className="flex flex-col" style={{ maxHeight: "50vh" }}>
+                        <div
+                          className="flex flex-col"
+                          style={{ maxHeight: "50vh" }}
+                        >
                           <ScrollArea className="h-[150px]">
                             {files.map((file) => (
                               <div
                                 key={file.id}
                                 className={cn(
-                                  "flex my-4 mx-4 items-center justify-between gap-2 rounded-lg border bg-background p-2 pe-3",
+                                  "flex w-full overflow-hidden my-4 items-center gap-2 rounded-lg border bg-background p-3",
                                   !file.label ||
                                     (!file.fileClass && "border-red-500")
                                 )}
@@ -548,7 +674,7 @@ export default function UploadToServer() {
                                   className="rounded-md object-cover"
                                 /> */}
                                   <div className="flex flex-col gap-0.5 min-w-0">
-                                    <p className=" text-[13px] font-medium">
+                                    <p className="text-[13px] font-medium truncate min-w-[180px] max-w-[180px]">
                                       {file.file.name}
                                     </p>
                                     <p className="text-xs text-muted-foreground">
@@ -744,7 +870,7 @@ export default function UploadToServer() {
                 </DropdownMenu>
               </div>
             </div>
-            <div className="overflow-hidden rounded-md border">
+            <div className="overflow-auto rounded-md border max-h-[70vh]">
               <Table>
                 <TableHeader>
                   {table.getHeaderGroups().map((headerGroup) => (
@@ -800,24 +926,6 @@ export default function UploadToServer() {
               <div className="text-muted-foreground flex-1 text-sm">
                 {table.getFilteredSelectedRowModel().rows.length} of{" "}
                 {table.getFilteredRowModel().rows.length} row(s) selected.
-              </div>
-              <div className="space-x-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => table.previousPage()}
-                  disabled={!table.getCanPreviousPage()}
-                >
-                  Previous
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => table.nextPage()}
-                  disabled={!table.getCanNextPage()}
-                >
-                  Next
-                </Button>
               </div>
             </div>
           </div>

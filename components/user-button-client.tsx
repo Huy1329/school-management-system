@@ -25,8 +25,9 @@ import { useRouter } from "next/navigation";
 import { useSearchContext } from "fumadocs-ui/contexts/search";
 import { authClient } from "@/app/lib/auth-client";
 import Image from "next/image";
-import { Avatar } from "@radix-ui/react-avatar";
-import { AvatarFallback, AvatarImage } from "./ui/avatar";
+//import { Avatar } from "@radix-ui/react-avatar";
+//import { AvatarFallback, AvatarImage } from "./ui/avatar";
+import { ScrollArea } from "@/components/ui/scroll-area";
 function removeVietnameseTones(str?: string): string {
   if (!str) return "";
   return str
@@ -234,10 +235,14 @@ export default function UserButtonClient() {
               onClick={() => setIsOpen(!isOpen)}
               className="cursor-pointer"
             >
-              <Avatar className="">
-                <AvatarImage className=" rounded-full size-8" src={imageUrl} />
-                <AvatarFallback>{userName?.[0] ?? "?"}</AvatarFallback>
-              </Avatar>
+                <Image
+                  src={imageUrl}
+                  alt={userName ?? "avatar"}
+                  width={32}
+                  height={32}
+                  className="rounded-full object-cover"
+                  priority
+                />
               {/* {session && session.user && session.user.image ? (
                 <img
                   height={40}
@@ -304,65 +309,65 @@ export default function UserButtonClient() {
                       ))}
                     </div>
                     <div className="border-b border-b-[#302f2f]"></div>
-                    <div className="flex flex-col gap-2 px-4 py-2">
-                      {itemsPartTwo.map((itemsPartTwo) => (
+
+                    <ScrollArea className="h-[150px] w-full">
+                      <div className="flex flex-col gap-2 px-4 py-2">
+                        {itemsPartTwo.map((itemsPartTwo) => (
+                          <Button
+                            key={itemsPartTwo.name}
+                            onMouseEnter={() => {
+                              setIsHovered(true);
+                              console.log("Hovered");
+                            }}
+                            onMouseLeave={() => {
+                              setIsHovered(false);
+                              console.log("Unhovered");
+                            }}
+                            className={`w-full border-none ${
+                              isHovered ? "bg-primary/90" : "bg-black"
+                            } justify-between`}
+                            variant="outline"
+                            onClick={() =>
+                              router.push(`/${itemsPartTwo.directLink}`)
+                            }
+                          >
+                            {itemsPartTwo.name}
+                            {itemsPartTwo.icon}
+                          </Button>
+                        ))}
+
                         <Button
-                          key={itemsPartTwo.name}
                           onMouseEnter={() => {
-                            setIsHovered(true); // Khi bắt đầu hover
+                            setIsHovered(true);
                             console.log("Hovered");
                           }}
                           onMouseLeave={() => {
-                            setIsHovered(false); // Khi kết thúc hover
+                            setIsHovered(false);
                             console.log("Unhovered");
                           }}
                           className={`w-full border-none ${
                             isHovered ? "bg-primary/90" : "bg-black"
                           } justify-between`}
                           variant="outline"
-                          onClick={() =>
-                            router.push(`/${itemsPartTwo.directLink}`)
-                          }
+                          onClick={() => {
+                            handleLogout();
+                            router.push("/home");
+                          }}
                         >
-                          {itemsPartTwo.name}
-                          {itemsPartTwo.icon}
+                          Logout
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="23"
+                            height="23"
+                            fill="#ffffff"
+                            viewBox="0 0 256 256"
+                          >
+                            <path d="M120,216a8,8,0,0,1-8,8H48a8,8,0,0,1-8-8V40a8,8,0,0,1,8-8h64a8,8,0,0,1,0,16H56V208h56A8,8,0,0,1,120,216Zm109.66-93.66-40-40A8,8,0,0,0,176,88v32H112a8,8,0,0,0,0,16h64v32a8,8,0,0,0,13.66,5.66l40-40A8,8,0,0,0,229.66,122.34Z"></path>
+                          </svg>
                         </Button>
-                      ))}
-
-                      <Button
-                        onMouseEnter={() => {
-                          setIsHovered(true); // Khi bắt đầu hover
-                          console.log("Hovered");
-                        }}
-                        onMouseLeave={() => {
-                          setIsHovered(false); // Khi kết thúc hover
-                          console.log("Unhovered");
-                        }}
-                        className={`w-full border-none ${
-                          isHovered ? "bg-primary/90" : "bg-black"
-                        } justify-between`}
-                        variant="outline"
-                        onClick={() => {
-                          handleLogout();
-                          router.push("/home");
-                        }}
-                      >
-                        Logout
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="23"
-                          height="23"
-                          fill="#ffffff"
-                          viewBox="0 0 256 256"
-                        >
-                          <path d="M120,216a8,8,0,0,1-8,8H48a8,8,0,0,1-8-8V40a8,8,0,0,1,8-8h64a8,8,0,0,1,0,16H56V208h56A8,8,0,0,1,120,216Zm109.66-93.66-40-40A8,8,0,0,0,176,88v32H112a8,8,0,0,0,0,16h64v32a8,8,0,0,0,13.66,5.66l40-40A8,8,0,0,0,229.66,122.34Z"></path>
-                        </svg>
-                      </Button>
-                    </div>
+                      </div>
+                    </ScrollArea>
                     <div className="border-b border-b-[#302f2f]"></div>
-                    <div className="flex flex-col px-4 py-2">
-                      <Button>Upgrade to Pro</Button>
-                    </div>
                   </div>
                 </div>
               </div>

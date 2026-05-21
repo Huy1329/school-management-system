@@ -111,7 +111,7 @@ export type TypeData = {
   file_size: string;
 };
 export const columns: ColumnDef<TypeData>[] = [
-  {
+  /*{
     id: "select",
     header: ({ table }) => (
       <Checkbox
@@ -132,7 +132,7 @@ export const columns: ColumnDef<TypeData>[] = [
     ),
     enableSorting: false,
     enableHiding: false,
-  },
+  },*/
   {
     accessorKey: "date",
     header: "Date",
@@ -245,55 +245,6 @@ export const columns: ColumnDef<TypeData>[] = [
                 View file
               </a>
             </DropdownMenuItem>
-
-            <DropdownMenuSeparator />
-
-            {/* <AlertDialog>
-              <AlertDialogTrigger asChild>
-                <DropdownMenuItem
-                  onClick={() => {
-                    [
-                      {
-                        uri: `./uploads/${data.user_email}/${data.file_name}`,
-                      },
-                    ];
-                  }}
-                >
-                  View More
-                </DropdownMenuItem>
-              </AlertDialogTrigger>
-
-              <AlertDialogContent className="max-w-[1480px] overflow-auto h-screen">
-                <AlertDialogHeader>
-                  <AlertDialogTitle className="hidden"></AlertDialogTitle>
-                </AlertDialogHeader>
-
-                <div className="h-full">
-                  <img className="rounded-lg" src={data.download_url} alt="" />
-
-                  <DocViewer
-                    className="h-[560px]"
-                    documents={[
-                      {
-                        uri: `./uploads/${data.user_email}/${data.file_name}`,
-                      },
-                    ]}
-                    initialActiveDocument={
-                      [
-                        {
-                          uri: `./uploads/${data.user_email}/${data.file_name}`,
-                        },
-                      ][0]
-                    }
-                    pluginRenderers={DocViewerRenderers}
-                  />
-                </div>
-
-                <AlertDialogFooter className="flex w-full xl:justify-between"></AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog> */}
-
-            <DropdownMenuItem>View file details</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );
@@ -301,7 +252,7 @@ export const columns: ColumnDef<TypeData>[] = [
   },
 ];
 type FileItem = { file_name: string; download_url: string; user_id?: string };
-
+/*
 const data: Record<string, { icon: JSX.Element }> = {
   png: {
     icon: (
@@ -513,7 +464,8 @@ const data: Record<string, { icon: JSX.Element }> = {
       </svg>
     ),
   },
-};
+
+};*/
 const subjectFilterData = [
   {
     id: 7,
@@ -768,7 +720,6 @@ export default function HomeSearchPage() {
     setFilter((prev) => {
       const current = prev[type];
       const isSelected = current.includes(value);
-
       return {
         ...prev,
         [type]: isSelected
@@ -778,28 +729,18 @@ export default function HomeSearchPage() {
     });
   }
 
-  // Toggle All
-  function toggleAll(type: "subject" | "class", allData: { value: string }[]) {
-    setFilter((prev) => ({
-      ...prev,
-      [type]:
-        prev[type].length === 0
-          ? allData.map((d) => d.value) // All đang bật → tắt All
-          : [], // All đang tắt → bật All
-    }));
-  }
+// Xóa hàm toggleAll — không cần nữa
 
   const filteredResults = useMemo(() => {
     return results
       .slice()
       .reverse()
       .filter((file) => {
+        // length === 0 nghĩa là không chọn gì → show all
         const matchSubject =
           filter.subject.length === 0 || filter.subject.includes(file.label);
-
         const matchClass =
           filter.class.length === 0 || filter.class.includes(file.file_class);
-
         return matchSubject && matchClass;
       });
   }, [results, filter]);
@@ -864,89 +805,53 @@ export default function HomeSearchPage() {
                     .getColumn("file_name")
                     ?.setFilterValue(event.target.value)
                 }
-                className="max-w-sm"
+                className="flex-shrink-0 flex gap-4 items-center justify-between py-4"
               />
               <InputGroupAddon>
                 <Search />
               </InputGroupAddon>
+              {/*
               <InputGroupAddon align="inline-end">
                 {results.length} results
               </InputGroupAddon>
+              */}
             </InputGroup>
-
+            <div>|</div>
             <div className="flex gap-4 items-center">
-              <div className="w-full justify-center  gap-6 flex items-center">
-                <Button
-                  onClick={() => toggleAll("subject", subjectFilterData)}
-                  variant="outline"
-                  size="sm"
-                  className={cn(
-                    filter.subject.length === 0
-                      ? "text-white"
-                      : "text-[#a1a1a1]"
-                  )}
-                >
-                  All Subjects
-                </Button>
-
-                {subjectFilterData
-                  .filter((d) => d.value !== "all")
-                  .map((data) => {
-                    const isSelected = filter.subject.includes(data.value);
-
-                    return (
-                      <Button
-                        key={data.id}
-                        disabled={filter.subject.length === 0} // disable khi All
-                        className={cn(
-                          isSelected ? "text-white" : "text-[#a1a1a1]",
-                          filter.subject.length === 0
-                            ? "opacity-40 cursor-not-allowed"
-                            : ""
-                        )}
-                        onClick={() => {
-                          if (filter.subject.length === 0) return;
-                          toggleFilter("subject", data.value);
-                        }}
-                        variant="outline"
-                        size="sm"
-                      >
-                        {data.icons}
-                        {data.name}
-                      </Button>
-                    );
-                  })}
-              </div>
+              {/*<div className="w-full justify-center  gap-6 flex items-center">
+              </div>*/}
               <Popover open={open} onOpenChange={setOpen}>
                 <PopoverTrigger asChild>
-                  <Button
-                    variant="outline"
-                    role="combobox"
-                    aria-expanded={open}
-                    className=" "
-                  >
-                    {/* {filter
-                ? subjectFilterData.find((framework) => framework.value === filter)
-                    ?.name
-                : "All"} */}
-                    <svg
-                      data-testid="geist-icon"
-                      height={16}
-                      strokeLinejoin="round"
-                      viewBox="0 0 16 16"
-                      width={16}
-                      style={{
-                        color: "currentcolor",
-                      }}
+                  <div className="relative">
+                    <Button
+                      variant="outline"
+                      role="combobox"
+                      aria-expanded={open}
+                      className=" "
                     >
-                      <path
-                        fillRule="evenodd"
-                        clipRule="evenodd"
-                        d="M1 0H1.75H14.25H15V0.75V3V3.31066L14.7803 3.53033L10.5 7.81066V15.25V16H9.75H9H8.7816L8.59734 15.8827L5.84734 14.1327L5.5 13.9117V13.5V7.81066L1.21967 3.53033L1 3.31066V3V0.75V0ZM2.5 1.5V2.68934L6.78033 6.96967L7 7.18934V7.5V13.0883L9 14.361V7.5V7.18934L9.21967 6.96967L13.5 2.68934V1.5H2.5Z"
-                        fill="currentColor"
-                      />
-                    </svg>
-                  </Button>
+                      <svg
+                        data-testid="geist-icon"
+                        height={16}
+                        strokeLinejoin="round"
+                        viewBox="0 0 16 16"
+                        width={16}
+                        style={{
+                          color: "currentcolor",
+                        }}
+                      >
+                        <path
+                          fillRule="evenodd"
+                          clipRule="evenodd"
+                          d="M1 0H1.75H14.25H15V0.75V3V3.31066L14.7803 3.53033L10.5 7.81066V15.25V16H9.75H9H8.7816L8.59734 15.8827L5.84734 14.1327L5.5 13.9117V13.5V7.81066L1.21967 3.53033L1 3.31066V3V0.75V0ZM2.5 1.5V2.68934L6.78033 6.96967L7 7.18934V7.5V13.0883L9 14.361V7.5V7.18934L9.21967 6.96967L13.5 2.68934V1.5H2.5Z"
+                          fill="currentColor"
+                        />
+                      </svg>
+                    </Button>
+                    {(filter.subject.length > 0 || filter.class.length > 0) && (
+                      <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-green-500 border border-background" />
+                    )}
+                  </div>
+
                 </PopoverTrigger>
                 <PopoverContent className="w-[200px] p-0">
                   <Command className="bg-black">
@@ -957,28 +862,22 @@ export default function HomeSearchPage() {
                     <ScrollArea>
                       <CommandList className="bg-black">
                         <CommandEmpty>No subject found.</CommandEmpty>
-
-                        {/* All Subjects */}
+                        {/* All Subjects — check khi không có môn nào được chọn */}
                         <CommandGroup>
                           <CommandItem
-                            value="all"
-                            onSelect={() =>
-                              toggleAll("subject", subjectFilterData)
-                            }
+                            value="all-subjects"
+                            onSelect={() => setFilter((prev) => ({ ...prev, subject: [] }))}
                           >
                             All Subjects
                             <Check
                               className={cn(
                                 "ml-auto",
-                                filter.subject.length === 0
-                                  ? "opacity-100"
-                                  : "opacity-0"
+                                filter.subject.length === 0 ? "opacity-100" : "opacity-0"
                               )}
                             />
                           </CommandItem>
                         </CommandGroup>
 
-                        {/* Subject filter */}
                         <CommandGroup heading="Subject">
                           {subjectFilterData
                             .filter((d) => d.value !== "all")
@@ -986,19 +885,14 @@ export default function HomeSearchPage() {
                               <CommandItem
                                 key={data.value}
                                 value={data.value}
-                                disabled={filter.subject.length === 0} // disable khi All bật
-                                onSelect={() => {
-                                  if (filter.subject.length === 0) return;
-                                  toggleFilter("subject", data.value);
-                                }}
+                                // Bỏ disabled
+                                onSelect={() => toggleFilter("subject", data.value)}
                               >
                                 {data.name}
                                 <Check
                                   className={cn(
                                     "ml-auto",
-                                    filter.subject.includes(data.value)
-                                      ? "opacity-100"
-                                      : "opacity-0"
+                                    filter.subject.includes(data.value) ? "opacity-100" : "opacity-0"
                                   )}
                                 />
                               </CommandItem>
@@ -1010,22 +904,19 @@ export default function HomeSearchPage() {
                         {/* All Classes */}
                         <CommandGroup>
                           <CommandItem
-                            value="all"
-                            onSelect={() => toggleAll("class", classFilterData)}
+                            value="all-classes"
+                            onSelect={() => setFilter((prev) => ({ ...prev, class: [] }))}
                           >
                             All Classes
                             <Check
                               className={cn(
                                 "ml-auto",
-                                filter.class.length === 0
-                                  ? "opacity-100"
-                                  : "opacity-0"
+                                filter.class.length === 0 ? "opacity-100" : "opacity-0"
                               )}
                             />
                           </CommandItem>
                         </CommandGroup>
 
-                        {/* Class filter */}
                         <CommandGroup heading="Class">
                           {classFilterData
                             .filter((d) => d.value !== "all")
@@ -1033,19 +924,14 @@ export default function HomeSearchPage() {
                               <CommandItem
                                 key={data.value}
                                 value={data.value}
-                                disabled={filter.class.length === 0} // disable khi All bật
-                                onSelect={() => {
-                                  if (filter.class.length === 0) return;
-                                  toggleFilter("class", data.value);
-                                }}
+                                // Bỏ disabled
+                                onSelect={() => toggleFilter("class", data.value)}
                               >
                                 {data.name}
                                 <Check
                                   className={cn(
                                     "ml-auto",
-                                    filter.class.includes(data.value)
-                                      ? "opacity-100"
-                                      : "opacity-0"
+                                    filter.class.includes(data.value) ? "opacity-100" : "opacity-0"
                                   )}
                                 />
                               </CommandItem>
@@ -1089,7 +975,7 @@ export default function HomeSearchPage() {
               <TableHeader>
                 {table.getHeaderGroups().map((headerGroup) => (
                   <TableRow key={headerGroup.id}>
-                    {headerGroup.headers.map((header) => {
+                   {headerGroup.headers.map((header) => {
                       return (
                         <TableHead key={header.id}>
                           {header.isPlaceholder
