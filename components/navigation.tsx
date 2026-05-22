@@ -5,37 +5,11 @@ import { authClient, useSession } from "@/app/lib/auth-client";
 import { usePathname, useRouter } from "next/navigation";
 import UserButtonClient from "./user-button-client";
 import Link from "next/link";
-const data = [
-  {
-    id: 1,
-    name: "Home",
-    src: "/home",
-  },
-  {
-    id: 2,
-    name: "Library",
-    src: "/library",
-  },
+import { useLanguage } from "@/components/language-context";
 
-  {
-    id: 3,
-    name: "Pricing",
-    src: "/pricing",
-  },
- 
-  {
-    id: 4,
-    name: "Support",
-    src: "/support",
-  },
-  /* {
-    id: 5,
-    name: "Docs",
-    src: "/docs",
-  },*/
-];
 export default function Navigation() {
   const pathname = usePathname();
+  const { t } = useLanguage();
   const router = useRouter();
   const signInWithGithub = async () => {
     const data = await authClient.signIn.social({
@@ -43,6 +17,30 @@ export default function Navigation() {
       callbackURL: "/",
     });
   };
+  const data = [
+    {
+      id: 1,
+      name: t.homePage,
+      src: "/home",
+    },
+    {
+      id: 2,
+      name: t.libraryMenu,
+      src: "/library",
+    },
+
+    {
+      id: 3,
+      name: t.pricing,
+      src: "/pricing",
+    },
+  
+    {
+      id: 4,
+      name: t.supportMenu,
+      src: "/support",
+    },
+  ];
   const {
     data: session,
 

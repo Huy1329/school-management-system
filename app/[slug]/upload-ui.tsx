@@ -23,6 +23,7 @@ import { authClient, useSession } from "../lib/auth-client";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { toast } from "sonner";
+import { useLanguage } from "@/components/language-context";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -83,6 +84,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import FileActions from "./FileActions";
+import { date } from "better-auth";
 const labels = [
   { value: "math", label: "Math" },
   { value: "physics", label: "Physics" },
@@ -100,7 +102,7 @@ export type TypeData = {
   type_file: string;
   file_size: string;
 };
-export const columns: ColumnDef<TypeData>[] = [
+const getColumns = (t: any): ColumnDef<TypeData>[] => [
   {
     id: "select",
     header: ({ table }) => (
@@ -125,7 +127,7 @@ export const columns: ColumnDef<TypeData>[] = [
   },
   {
     accessorKey: "date",
-    header: "Date",
+    header: t.date,
     cell: ({ row }) => <div className="capitalize">{row.getValue("date")}</div>,
   },
 
@@ -137,7 +139,7 @@ export const columns: ColumnDef<TypeData>[] = [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          File Name
+          {t.file_name}
           <ArrowUpDown />
         </Button>
       );
@@ -147,14 +149,14 @@ export const columns: ColumnDef<TypeData>[] = [
   },
   {
     accessorKey: "file_class",
-    header: "File Class",
+    header: t.class,
     cell: ({ row }) => (
       <div className="capitalize">{row.getValue("file_class")}</div>
     ),
   },
   {
     accessorKey: "file_size",
-    header: "File Size",
+    header: t.file_Size,
     cell: ({ row }) => (
       <div className="capitalize text-sm">
         {formatBytes(row.getValue("file_size"))}
@@ -163,14 +165,14 @@ export const columns: ColumnDef<TypeData>[] = [
   },
   {
     accessorKey: "type_file",
-    header: "File Type",
+    header: t.file_Type,
     cell: ({ row }) => (
       <div className="capitalize text-sm">{row.getValue("type_file")}</div>
     ),
   },
   {
     accessorKey: "label",
-    header: "Subject",
+    header: t.subject,
     cell: ({ row }) => (
       <div className="capitalize">{row.getValue("label")}</div>
     ),
@@ -187,6 +189,17 @@ export const columns: ColumnDef<TypeData>[] = [
 ];
 export default function UploadToServer() {
   const { data: session } = useSession();
+  const { t } = useLanguage();
+  const columnTranslations: Record<string, string> = {
+    date: t.date,
+    user_email: t.email,
+    name: t.fileName,
+    file_class: t.class,
+    label: t.subject,
+    file_size: t.file_Size,
+    type_file: t.file_Type,
+    actions: t.actions,
+  };
   const token = session?.session?.token;
   const [login, setLogin] = useState(token ? true : false);
   const userEmail = session?.user?.email;
@@ -440,7 +453,7 @@ export default function UploadToServer() {
 
   const table = useReactTable<TypeData>({
     data: serverFiles,
-    columns,
+    columns: getColumns(t),
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
@@ -561,10 +574,9 @@ export default function UploadToServer() {
                     <AlertDialogContent>
                       <AlertDialogHeader>
                         <AlertDialogTitle>Xác nhận xóa</AlertDialogTitle>
-                        <AlertDialogDescription>
-                          Bạn có chắc muốn xóa {selectedCount} file đã chọn?
-                          Hành động này không thể hoàn tác.
-                        </AlertDialogDescription>
+                          <AlertDialogDescription>
+                            Bạn có chắc muốn xóa {selectedCount} file đã chọn? Hành động này không thể hoàn tác.
+                          </AlertDialogDescription>
                       </AlertDialogHeader>
                       <AlertDialogFooter>
                         <AlertDialogCancel>Hủy</AlertDialogCancel>
@@ -580,7 +592,7 @@ export default function UploadToServer() {
                   <AlertDialogTrigger asChild>
                     <Button variant="outline" className="">
                       <Upload />
-                      Upload
+                      {t.upload}
                     </Button>
                   </AlertDialogTrigger>
                   <AlertDialogContent className="max-w-[850px]! ">
@@ -588,8 +600,10 @@ export default function UploadToServer() {
                       <AlertDialogCancel className="self-end border-none! dark:bg-none!">
                         <XIcon></XIcon>
                       </AlertDialogCancel>
-
-                      
+                        <AlertDialogDescription className="sr-only">
+                          Upload your files here
+                        </AlertDialogDescription>
+                                          
                       <AlertDialogTitle className="flex w-full pb-4 justify-center">
                         <div
                           className={`w-full border-2 border-dashed rounded-xl py-3 flex flex-col items-center gap-3 cursor-pointer transition-colors
@@ -845,7 +859,7 @@ export default function UploadToServer() {
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="outline" className="ml-auto">
-                      Columns <ChevronDown />
+                      {t.columns} <ChevronDown />
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
@@ -862,7 +876,7 @@ export default function UploadToServer() {
                               column.toggleVisibility(!!value)
                             }
                           >
-                            {column.id.replace("_", " ")}
+                            {columnTranslations[column.id] || column.id.replace("_", " ")}
                           </DropdownMenuCheckboxItem>
                         );
                       })}
@@ -912,7 +926,7 @@ export default function UploadToServer() {
                   ) : (
                     <TableRow>
                       <TableCell
-                        colSpan={columns.length}
+                        colSpan={getColumns(t).length}
                         className="h-24 text-center"
                       >
                         No results.

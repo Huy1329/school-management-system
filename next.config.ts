@@ -5,18 +5,26 @@ const nextConfig: NextConfig = {
     viewTransition: true,
     turbopackFileSystemCacheForDev: true,
   },
+
   images: {
     remotePatterns: [
-      new URL("http://127.0.0.1:8000/**"),
-      new URL("https://avatars.githubusercontent.com/**"),
-      new URL("https://lh3.googleusercontent.com/**"),
+      {
+        protocol: "http",
+        hostname: "127.0.0.1",
+        port: "8000",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "avatars.githubusercontent.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "lh3.googleusercontent.com",
+        pathname: "/**",
+      },
     ],
-s
-    // localPatterns: [
-    //   {
-    //     pathname: "https://avatars.githubusercontent.com/**",
-    //   },
-    // ],
   },
 };
 

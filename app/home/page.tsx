@@ -6,8 +6,9 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import { useSession } from "@/app/lib/auth-client";
-
+import { useLanguage } from "@/components/language-context";
 export default function HomePage() {
+  const { t } = useLanguage();
   const { data: session } = useSession();
 
   return (
@@ -41,20 +42,17 @@ export default function HomePage() {
             className="rounded-(--radius) flex w-fit items-center justify-center gap-2 border p-1 pr-3 lg:ml-0"
           >
             <span className="bg-muted rounded-[calc(var(--radius)-0.25rem)] px-2 py-1 text-xs">
-              New
+              {t.new}
             </span>
-            <span className="text-sm">Introduction Upload</span>
+            <span className="text-sm">{t.new_1}</span>
             <span className="bg-(--color-border) block h-4 w-px"></span>
             <ArrowRight className="size-4" />
           </Link>
           <h1 className="w-[700px] text-center text-3xl font-medium md:text-5xl xl:text-6xl">
-            A Complete Learning Resource for Students
+            {t.main_title}
           </h1>
           <p className="w-[530px] text-center">
-            Discover a rich collection of learning resources, study materials,
-            and inspirational content designed to guide you through every step
-            of your educational journey — helping you achieve your academic
-            goals, develop critical thinking, and grow into a lifelong learner.
+            {t.description}
           </p>
           <div className="flex gap-4 items-center">
             <Link href={session ? "/library" : "/login"}>
@@ -62,8 +60,7 @@ export default function HomePage() {
                 variant={"outline"}
                 className="flex items-center gap-2"
               >
-                Getting Started
-              
+                {t.get_started}
               </Button>
             </Link>
           </div>
