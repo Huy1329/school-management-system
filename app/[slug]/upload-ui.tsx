@@ -297,16 +297,16 @@ export default function UploadToServer() {
   // 📤 Upload file
   const handleUploadToServer = async () => {
     if (!token || !userEmail) {
-      setStatus("Vui lòng đăng nhập trước khi tải lên.");
+      setStatus(t.mot);
       return;
     }
     const filesWithoutLabel = files.filter((f) => !f.label);
     if (filesWithoutLabel.length > 0) {
-      toast.warning("Vui lòng chọn label cho tất cả file trước khi upload.");
+      toast.warning(t.hai);
       return;
     }
     if (files.length === 0) {
-      setStatus("Vui lòng chọn file trước khi tải lên.");
+      setStatus(t.ba);
       return;
     }
     const now = new Date();
@@ -348,7 +348,7 @@ export default function UploadToServer() {
 
     try {
       setUploading(true);
-      setStatus("Đang tải lên...");
+      setStatus(t.dang_tai);
 
       const res = await fetch("http://127.0.0.1:8000/upload", {
         method: "POST",
@@ -375,7 +375,7 @@ export default function UploadToServer() {
   // ❌ Xóa file
   const handleDeleteFile = async (file_name: string) => {
     if (!token || !userEmail) {
-      toast.warning("Vui lòng đăng nhập để xóa file.");
+      toast.warning(t.login_del_file);
       return;
     }
 
@@ -396,18 +396,18 @@ export default function UploadToServer() {
         toast.success(data.message);
         fetchServerFiles();
       } else {
-        toast.error(data.error || "Không thể xóa file.");
+        toast.error(data.error || t.no_del_file);
       }
     } catch (err) {
       console.error(err);
-      toast.error("Không thể kết nối đến server!");
+      toast.error(t.error_server);
     }
   };
 
   // ✏️ Đổi tên file
   const handleRenameFile = async () => {
     if (!token || !userEmail) {
-      toast.warning("Vui lòng đăng nhập để đổi tên file.");
+      toast.warning(t.login_rename_file);
       return;
     }
 
@@ -434,11 +434,11 @@ export default function UploadToServer() {
         setEditingFile(null);
         fetchServerFiles();
       } else {
-        toast.error(data.detail || "Lỗi khi đổi tên file.");
+        toast.error(data.detail || t.error_rena_file);
       }
     } catch (err) {
       console.error(err);
-      toast.error("Không thể kết nối đến server!");
+      toast.error(t.error_server);
     }
   };
 
@@ -476,7 +476,7 @@ export default function UploadToServer() {
 
   const handleDeleteSelected = async () => {
     if (!token || !userEmail) {
-      toast.warning("Vui lòng đăng nhập để xóa file.");
+      toast.warning(t.login_del_file);
       return;
     }
 
@@ -516,7 +516,7 @@ export default function UploadToServer() {
         <div className="mt-[5rem]">
           <Alert variant="destructive">
             <TriangleAlert />
-            <AlertTitle>Bạn cần đăng nhập để tải file.</AlertTitle>
+            <AlertTitle>{t.login_upload}</AlertTitle>
             <AlertDescription>
               Hãy đăng nhập để sử dụng chức năng upload và quản lý file.
             </AlertDescription>
@@ -548,7 +548,7 @@ export default function UploadToServer() {
           <div className="w-full">
             <div className="flex justify-between items-center py-4">
               <Input
-                placeholder="Filter file name..."
+                placeholder={t.filterPlaceholder}
                 value={
                   (table.getColumn("name")?.getFilterValue() as string) ?? ""
                 }
