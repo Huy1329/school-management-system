@@ -26,6 +26,10 @@ const nextConfig: NextConfig = {
       { protocol: "https",
          hostname: "*.onrender.com" 
       },
+      {
+        protocol: "https",
+        hostname: "school-frontend.onrender.com",
+      },
     ],
   },
 };
